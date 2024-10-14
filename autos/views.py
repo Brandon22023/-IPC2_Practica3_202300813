@@ -1,27 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
-from flask_app import app as flask_app
-from werkzeug.serving import run_simple
-
 
 def cargar_datos(request):
     if request.method == 'POST':
         archivo = request.FILES.get('archivo')
         if archivo:
-            print(archivo)
-            print(f'Archivo cargado: {archivo.name}, tamaño: {archivo.size} bytes')
-
             if archivo.size > 0:
                 # URL de tu backend Flask
-                url = 'http://127.0.0.1:5000/upload'  
+                url = 'http://127.0.0.1:5000/upload'
                 files = {'archivo': (archivo.name, archivo.read())}
                 response = requests.post(url, files=files)
 
                 if response.status_code == 200:
                     data = response.json()
                     mensaje = data['mensaje']
-                    return render(request, 'cargar_datos.html', {'mensaje': mensaje})
+                    resultados = data['resultados']  # Aquí obtenemos el XML
+                    # Pasamos el XML procesado al método procesar_datos
+                    return render(request, 'procesar_datos.html', {'datos_xml': resultados})
                 else:
                     mensaje = response.json().get('mensaje', 'Error desconocido.')
                     return render(request, 'cargar_datos.html', {'mensaje': mensaje})
@@ -33,7 +29,9 @@ def cargar_datos(request):
     return render(request, 'cargar_datos.html')
 
 def procesar_datos(request):
-    return render(request, 'procesar_datos.html')
+    # Se renderiza la plantilla con el XML ya procesado
+    datos_xml = request.POST.get('datos_xml')
+    return render(request, 'procesar_datos.html', {'datos_xml': datos_xml})
 
 def ver_grafico(request):
     return render(request, 'ver_grafico.html')

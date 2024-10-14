@@ -4,24 +4,7 @@
 <h1>Datos Procesados</h1>
 <div class="data-container">
     {% if datos_xml %}
-        <table>
-            <thead>
-                <tr>
-                    {% for key in datos_xml.0.keys %}
-                        <th>{{ key }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in datos_xml %}
-                    <tr>
-                        {% for value in item.values %}
-                            <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <pre>{{ datos_xml }}</pre>  <!-- Muestra el XML en formato de texto preformateado -->
     {% else %}
         <p>No hay datos disponibles. Por favor, carga un archivo XML primero.</p>
     {% endif %}
