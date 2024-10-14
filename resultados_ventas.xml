@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<resultados>
+  <departamentos>
+    <departamento nombre="Guatemala">
+      <cantidadVentas>2</cantidadVentas>
+    </departamento>
+    <departamento nombre="Petén">
+      <cantidadVentas>1</cantidadVentas>
+    </departamento>
+    <departamento nombre="San Marcos">
+      <cantidadVentas>1</cantidadVentas>
+    </departamento>
+  </departamentos>
+</resultados>
