@@ -4,13 +4,13 @@
         <venta departamento="Guatemala">
             <Fecha>15/09/2024</Fecha>
         </venta>
-        <venta departamento="Petén">
+        <venta departamento="San Marcos">
             <Fecha>15/09/2024</Fecha>
         </venta>
         <venta departamento="San Marcos">
             <Fecha>16/09/2024</Fecha>
         </venta>
-        <venta departamento="Guatemala">
+        <venta departamento="San Marcos">
             <Fecha>16/09/2024</Fecha>
         </venta>
     </ListadoVentas>
