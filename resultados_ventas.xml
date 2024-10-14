@@ -2,10 +2,13 @@
 <resultados>
   <departamentos>
     <Guatemala>
-      <cantidadVentas>1</cantidadVentas>
+      <cantidadVentas>2</cantidadVentas>
     </Guatemala>
+    <Petén>
+      <cantidadVentas>1</cantidadVentas>
+    </Petén>
     <San Marcos>
-      <cantidadVentas>3</cantidadVentas>
+      <cantidadVentas>1</cantidadVentas>
     </San Marcos>
   </departamentos>
 </resultados>
