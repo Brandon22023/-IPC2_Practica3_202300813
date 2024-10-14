@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Ver Grafico</h1>
-<p>Aquí puedes ver el grafico de los datos que has subido.</p>
-<img src="{% url 'ver_grafico' %}" alt="Gráfico de Ventas por Departamento">
+<h1>Ver Gráfico</h1>
+<p>Aquí puedes ver el gráfico de los datos que has subido.</p>
+{% if imagen %}
+    <img src="data:image/png;base64,{{ imagen }}" alt="Gráfico de Ventas por Departamento">
+{% else %}
+    <p>No se pudo cargar el gráfico.</p>
+{% endif %}
 {% endblock %}

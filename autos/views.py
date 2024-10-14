@@ -1,3 +1,4 @@
+import base64
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
@@ -44,18 +45,16 @@ def procesar_datos(request):
     return render(request, 'procesar_datos.html')
 
 def ver_grafico(request):
-    # URL para obtener la gráfica desde Flask
+    # Solicitar el gráfico a Flask
     url = 'http://127.0.0.1:5000/grafico'
-    
-    # Obtener la imagen de la gráfica desde Flask
     response = requests.get(url)
-    
+
     if response.status_code == 200:
-        # Si la imagen se genera correctamente, pasarla al template
-        image_data = response.content
-        return HttpResponse(image_data, content_type='image/png')
+        # Leer la imagen en bytes y codificarla en base64
+        imagen_base64 = base64.b64encode(response.content).decode('utf-8')
+        return render(request, 'ver_grafico.html', {'imagen': imagen_base64})
     else:
-        return HttpResponse("Error al generar el gráfico.", status=500)
+        return render(request, 'ver_grafico.html', {'mensaje': 'No se pudo cargar el gráfico.'})
 
 def datos_estudiante(request):
     return render(request, 'datos_estudiante.html')

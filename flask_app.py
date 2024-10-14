@@ -6,8 +6,13 @@ import io
 
 app = Flask(__name__)
 
+# Variable global para almacenar los resultados
+ventas_por_departamento = None
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    global ventas_por_departamento  # Usamos la variable global
+
     if 'archivo' not in request.files:
         return jsonify({'mensaje': 'No se ha cargado ningún archivo.'}), 400
 
@@ -25,8 +30,8 @@ def upload_file():
         except ET.ParseError as e:
             return jsonify({'mensaje': f'Error al procesar el archivo XML: {e}'}), 400
 
-        # Contar ventas por departamento
-        contador = contar_ventas_por_departamento(root)
+        # Contar ventas por departamento y guardar en la variable global
+        ventas_por_departamento = contar_ventas_por_departamento(root)
 
         return jsonify({'mensaje': 'Archivo cargado y procesado con éxito.'}), 200
 
@@ -41,17 +46,14 @@ def contar_ventas_por_departamento(root):
 
 @app.route('/grafico', methods=['GET'])
 def generar_grafico():
-    # Aquí asumiré que ya tenemos los datos procesados.
-    # Por ejemplo, los datos de los departamentos y las ventas:
-    contador = {
-        'Guatemala': 2,
-        'Petén': 1,
-        'San Marcos': 1
-    }
+    global ventas_por_departamento  # Acceder a la variable global
+
+    if ventas_por_departamento is None:
+        return jsonify({'mensaje': 'No hay datos de ventas disponibles.'}), 400
 
     # Generar gráfico de pastel
-    departamentos = list(contador.keys())
-    ventas = list(contador.values())
+    departamentos = list(ventas_por_departamento.keys())
+    ventas = list(ventas_por_departamento.values())
 
     fig, ax = plt.subplots()
     ax.pie(ventas, labels=departamentos, autopct='%1.1f%%', startangle=90)
