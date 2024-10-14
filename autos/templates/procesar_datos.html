@@ -7,7 +7,7 @@
     <!-- Botón para procesar datos -->
     <form method="POST">
         {% csrf_token %}
-        <button type="submit">Mostrar Resultados</button>
+        <button type="submit" class="styled-button">Mostrar Resultados</button>
     </form>
 
     <!-- Sección para mostrar el XML -->
@@ -16,4 +16,22 @@
         <pre>{{ datos_xml }}</pre>  <!-- Muestra el XML con formato preformateado -->
     {% endif %}
 </div>
+
+<!-- Estilos CSS personalizados -->
+<style>
+    .styled-button {
+        background-color: #333; /* Color de fondo verde */
+        color: white; /* Texto en blanco */
+        padding: 10px 20px; /* Espaciado interno */
+        border: none; /* Sin borde */
+        border-radius: 5px; /* Bordes redondeados */
+        cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+        font-size: 16px; /* Tamaño de fuente */
+        transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+    }
+
+    .styled-button:hover {
+        background-color: #555; /* Color de fondo al pasar el ratón */
+    }
+</style>
 {% endblock %}
