@@ -1,25 +1,30 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
+from werkzeug import run_simple
+import flask_app
 
 def cargar_datos(request):
     if request.method == 'POST':
         archivo = request.FILES.get('archivo')
         if archivo:
+            print(archivo)
+            print(f'Archivo cargado: {archivo.name}, tamaño: {archivo.size} bytes')
+
             if archivo.size > 0:
                 # URL de tu backend Flask
-                url = 'http://127.0.0.1:5000/upload'
+                url = 'http://127.0.0.1:5000/upload'  
                 files = {'archivo': (archivo.name, archivo.read())}
                 response = requests.post(url, files=files)
 
                 if response.status_code == 200:
-                    # Solo guardar el archivo, sin mostrarlo
                     data = response.json()
-                    mensaje = data['mensaje']
-                    resultados = data['resultados']  # Obtenemos el XML generado
-                    # Guardar el XML en la sesión
-                    request.session['resultados_xml'] = resultados
-                    return render(request, 'cargar_datos.html', {'mensaje': mensaje})
+                    print(f'Respuesta de Flask: {data}')  # <-- Agrega esta línea para depuración
+                    resultados = data.get('resultados')  # Usa .get() en lugar de acceder directamente
+                    if resultados:
+                        return render(request, 'cargar_datos.html', {'mensaje': resultados})
+                    else:
+                        return render(request, 'cargar_datos.html', {'mensaje': 'No se encontraron resultados.'})
                 else:
                     mensaje = response.json().get('mensaje', 'Error desconocido.')
                     return render(request, 'cargar_datos.html', {'mensaje': mensaje})
@@ -39,7 +44,18 @@ def procesar_datos(request):
     return render(request, 'procesar_datos.html')
 
 def ver_grafico(request):
-    return render(request, 'ver_grafico.html')
+    # URL para obtener la gráfica desde Flask
+    url = 'http://127.0.0.1:5000/grafico'
+    
+    # Obtener la imagen de la gráfica desde Flask
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        # Si la imagen se genera correctamente, pasarla al template
+        image_data = response.content
+        return HttpResponse(image_data, content_type='image/png')
+    else:
+        return HttpResponse("Error al generar el gráfico.", status=500)
 
 def datos_estudiante(request):
     return render(request, 'datos_estudiante.html')
