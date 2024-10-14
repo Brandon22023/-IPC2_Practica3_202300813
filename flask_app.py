@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 import xml.etree.ElementTree as ET
 from collections import defaultdict
-from xml.dom import minidom  # Importamos minidom para formatear el XML
-import os
 
 app = Flask(__name__)
 
@@ -31,21 +29,16 @@ def upload_file():
         # Contar ventas por departamento
         contador = contar_ventas_por_departamento(root)
 
-        # Crear el XML de resultados
+        # Crear el XML de resultados con la estructura correcta
         resultados_xml = crear_xml_resultados(contador)
 
-        # Guardar el XML en un archivo formateado
-        try:
-            filename = 'resultados_ventas.xml'
-            guardar_xml_en_archivo(resultados_xml, filename)
-            print("Archivo XML guardado como 'resultados_ventas.xml'.")
+        # Guardar el XML en un archivo
+        filename = 'resultados_ventas.xml'
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(resultados_xml)
 
-            # Imprimir el contenido del archivo XML creado
-            with open(filename, 'r', encoding='utf-8') as file:
-                print(f'Contenido del archivo guardado:\n{file.read()}')
-
-        except Exception as e:
-            return jsonify({'mensaje': f'Error al guardar el archivo XML: {e}'}), 500
+        # Imprimir el archivo XML creado
+        print(f'Contenido del archivo creado:\n{resultados_xml}')
 
         return jsonify({'mensaje': 'Archivo cargado y procesado con éxito.'}), 200
 
@@ -61,24 +54,19 @@ def contar_ventas_por_departamento(root):
     return contador
 
 def crear_xml_resultados(contador):
-    resultados = ET.Element('resultados')
-    departamentos = ET.SubElement(resultados, 'departamentos')
+    # Iniciar la estructura XML manualmente
+    xml_resultados = '<?xml version="1.0" encoding="UTF-8"?>\n<resultados>\n  <departamentos>\n'
 
     for departamento, cantidad in contador.items():
-        depto_elem = ET.SubElement(departamentos, 'departamento', nombre=departamento)
-        
-        # Crear el elemento cantidadVentas
-        cantidad_elem = ET.SubElement(depto_elem, 'cantidadVentas')
-        cantidad_elem.text = str(cantidad)  # Asignamos la cantidad
+        # Agregar el departamento como etiqueta y la cantidad de ventas como contenido
+        xml_resultados += f'    <{departamento}>\n'
+        xml_resultados += f'      <cantidadVentas>{cantidad}</cantidadVentas>\n'
+        xml_resultados += f'    </{departamento}>\n'
 
-    return resultados
+    # Cerrar las etiquetas del XML
+    xml_resultados += '  </departamentos>\n</resultados>'
 
-def guardar_xml_en_archivo(xml_element, filename):
-    # Guardar el XML en un archivo de forma legible
-    xml_str = ET.tostring(xml_element, encoding='utf-8', xml_declaration=True).decode('utf-8')
-    pretty_xml = minidom.parseString(xml_str)
-    with open(filename, 'w', encoding='utf-8') as file:
-        file.write(pretty_xml.toprettyxml(indent="  "))  # Escribimos el XML con indentación
+    return xml_resultados
 
 # Inicia la aplicación Flask
 if __name__ == '__main__':
