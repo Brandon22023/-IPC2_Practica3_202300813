@@ -13,11 +13,13 @@ def cargar_datos(request):
                 response = requests.post(url, files=files)
 
                 if response.status_code == 200:
+                    # Solo guardar el archivo, sin mostrarlo
                     data = response.json()
                     mensaje = data['mensaje']
-                    resultados = data['resultados']  # Aquí obtenemos el XML
-                    # Pasamos el XML procesado al método procesar_datos
-                    return render(request, 'procesar_datos.html', {'datos_xml': resultados})
+                    resultados = data['resultados']  # Obtenemos el XML generado
+                    # Guardar el XML en la sesión
+                    request.session['resultados_xml'] = resultados
+                    return render(request, 'cargar_datos.html', {'mensaje': mensaje})
                 else:
                     mensaje = response.json().get('mensaje', 'Error desconocido.')
                     return render(request, 'cargar_datos.html', {'mensaje': mensaje})
@@ -27,11 +29,14 @@ def cargar_datos(request):
             return render(request, 'cargar_datos.html', {'mensaje': 'No se ha cargado ningún archivo.'})
 
     return render(request, 'cargar_datos.html')
-
 def procesar_datos(request):
-    # Se renderiza la plantilla con el XML ya procesado
-    datos_xml = request.POST.get('datos_xml')
-    return render(request, 'procesar_datos.html', {'datos_xml': datos_xml})
+    if request.method == 'POST':
+        # Recuperamos el XML almacenado en la sesión
+        datos_xml = request.session.get('resultados_xml', None)
+        return render(request, 'procesar_datos.html', {'datos_xml': datos_xml})
+    
+    # Si no es POST, mostramos la página sin datos
+    return render(request, 'procesar_datos.html')
 
 def ver_grafico(request):
     return render(request, 'ver_grafico.html')

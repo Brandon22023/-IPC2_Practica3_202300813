@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Datos Procesados</h1>
+<h1>Procesar Datos</h1>
+
 <div class="data-container">
+    <!-- Botón para procesar datos -->
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Mostrar Resultados</button>
+    </form>
+
+    <!-- Sección para mostrar el XML -->
     {% if datos_xml %}
-        <pre>{{ datos_xml }}</pre>  <!-- Muestra el XML en formato de texto preformateado -->
-    {% else %}
-        <p>No hay datos disponibles. Por favor, carga un archivo XML primero.</p>
+        <h2>Resultados del XML:</h2>
+        <pre>{{ datos_xml }}</pre>  <!-- Muestra el XML con formato preformateado -->
     {% endif %}
 </div>
 {% endblock %}
