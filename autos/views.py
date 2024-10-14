@@ -9,7 +9,6 @@ def cargar_datos(request):
     if request.method == 'POST':
         archivo = request.FILES.get('archivo')
         if archivo:
-            print(archivo)
             print(f'Archivo cargado: {archivo.name}, tamaño: {archivo.size} bytes')
 
             if archivo.size > 0:
@@ -22,6 +21,10 @@ def cargar_datos(request):
                     data = response.json()
                     print(f'Respuesta de Flask: {data}')  # <-- Agrega esta línea para depuración
                     resultados = data.get('resultados')  # Usa .get() en lugar de acceder directamente
+                    
+                    # Almacenar los resultados en la sesión
+                    request.session['resultados_xml'] = resultados
+                    
                     if resultados:
                         return render(request, 'cargar_datos.html', {'mensaje': resultados})
                     else:
@@ -35,6 +38,7 @@ def cargar_datos(request):
             return render(request, 'cargar_datos.html', {'mensaje': 'No se ha cargado ningún archivo.'})
 
     return render(request, 'cargar_datos.html')
+
 def procesar_datos(request):
     if request.method == 'POST':
         # Recuperamos el XML almacenado en la sesión
