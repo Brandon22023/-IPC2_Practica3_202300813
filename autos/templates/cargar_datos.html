@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cargar Datos</h1>
+<div class="upload-container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="archivo" class="file-label">Selecciona un archivo:</label>
+            <input type="file" name="archivo" id="archivo" class="file-input">
+        </div>
+        <button type="submit">Cargar Archivo</button> <!-- Botón para enviar el formulario -->
+    </form>
+</div>
+{% endblock %}

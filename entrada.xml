@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resumen>
+    <ListadoVentas>
+        <venta departamento="Guatemala">
+            <Fecha>15/09/2024</Fecha>
+        </venta>
+        <venta departamento="Petén">
+            <Fecha>15/09/2024</Fecha>
+        </venta>
+        <venta departamento="San Marcos">
+            <Fecha>16/09/2024</Fecha>
+        </venta>
+        <venta departamento="Guatemala">
+            <Fecha>16/09/2024</Fecha>
+        </venta>
+    </ListadoVentas>
+</Resumen>
